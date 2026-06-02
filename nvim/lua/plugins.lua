@@ -1,31 +1,5 @@
--- ========================================================================== --
--- SYSTEM SETTINGS & LEADER
--- ========================================================================== --
-vim.g.mapleader = " "
-
--- Global Keymaps
-vim.keymap.set('v', '<C-c>', '"+y', { noremap = true, silent = true })
-
--- ========================================================================== --
--- LAZY.NVIM BOOTSTRAP
--- ========================================================================== --
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
-
--- ========================================================================== --
 -- PLUGINS CONFIGURATION
--- ========================================================================== --
-local plugins = {
+return {
   -- Theme
   {
     "catppuccin/nvim",
@@ -60,14 +34,14 @@ local plugins = {
     end
   },
 
--- Treesitter (Syntax Highlighting)
+  -- Treesitter (Syntax Highlighting)
   {
     'nvim-treesitter/nvim-treesitter',
     branch = "master",
     event = { "BufReadPre", "BufNewFile" },
     build = ':TSUpdate',
     config = function()
-      -- Classic branch setup syntax
+
       require('nvim-treesitter.configs').setup({
         ensure_installed = { 
           "javascript", "typescript", "tsx", "html", "css", 
@@ -82,10 +56,17 @@ local plugins = {
       })
     end
   },
+
+ -- Neo-tree
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    lazy = false,
+  },
   
 }
-
--- ========================================================================== --
--- INITIALIZE LAZY
--- ========================================================================== --
-require("lazy").setup(plugins)
